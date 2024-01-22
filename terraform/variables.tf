@@ -10,7 +10,7 @@ variable "environment" {
 
 variable "region" {
   type        = string
-  description = "Azure region"
+  description = "AWS region"
   default     = "us-east-1"
 }
 
