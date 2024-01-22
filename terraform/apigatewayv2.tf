@@ -40,13 +40,21 @@ resource "aws_apigatewayv2_integration" "document_handler" {
 }
 
 # Map an HTTP request to the Lambda function. 
-# The route_key matches any GET request matching the path /document.
+# The route_key matches any GET request matching the path /document/{document_id}
 # A target matching integrations/<ID> maps to a Lambda integration with the given ID.
-resource "aws_apigatewayv2_route" "document_handler" {
+resource "aws_apigatewayv2_route" "get_document" {
   api_id = aws_apigatewayv2_api.document_handler.id
 
   authorization_type = "NONE"
-  route_key = "GET /document"
+  route_key = "GET /document/{document_id}"
+  target    = "integrations/${aws_apigatewayv2_integration.document_handler.id}"
+}
+
+resource "aws_apigatewayv2_route" "post_document" {
+  api_id = aws_apigatewayv2_api.document_handler.id
+
+  authorization_type = "NONE"
+  route_key = "POST /document"
   target    = "integrations/${aws_apigatewayv2_integration.document_handler.id}"
 }
 
