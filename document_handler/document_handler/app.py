@@ -1,5 +1,8 @@
 import hashlib
 
+import pymysql
+import boto3
+
 from aws_lambda_powertools.event_handler import APIGatewayHttpResolver
 from aws_lambda_powertools.utilities.typing import LambdaContext
 from aws_lambda_powertools.logging import correlation_paths
@@ -16,6 +19,9 @@ metrics = Metrics(namespace="Powertools")
 @app.get("/document/<document_id>")
 @tracer.capture_method
 def get_document(document_id: str):
+    ssm_client = boto3.client('ssm')
+    rds_client = boto3.client('rds')
+
     # adding custom metrics
     # See:  https://awslabs.github.io/aws-lambda-powertools-python/latest/core/metrics/
     metrics.add_metric(name="GetDocumentInvocations", unit=MetricUnit.Count, value=1)
