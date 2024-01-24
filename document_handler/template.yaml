@@ -1,0 +1,55 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  document_handler
+
+  Powertools for AWS Lambda (Python) example
+
+Globals: # https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-specification-template-anatomy-globals.html
+  Function:
+    Timeout: 15
+
+    Tracing: Active
+    # You can add LoggingConfig parameters such as the Logformat, Log Group, and SystemLogLevel or ApplicationLogLevel. Learn more here https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-resource-function.html#sam-function-loggingconfig.
+    LoggingConfig:
+      LogFormat: JSON
+  Api:
+    TracingEnabled: true
+Resources:
+  DocumentHandlerFunction:
+    Type: AWS::Serverless::Function     # More info about Function Resource: https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-resource-function.html
+    Properties:
+      Description: Document Handler function
+      PackageType: Image
+      Architectures:
+      - x86_64
+      Tracing: Active
+      Events:
+        GetDocumentPath:
+          Type: HttpApi           # More info about API Event Source: https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-property-function-api.html
+          Properties:
+            Path: /document/{document_id}
+            Method: GET
+             # Powertools for AWS Lambda (Python) env vars: https://awslabs.github.io/aws-lambda-powertools-python/#environment-variables
+        PostDocumentPath:
+          Type: HttpApi           # More info about API Event Source: https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-property-function-api.html
+          Properties:
+            Path: /document
+            Method: POST
+             # Powertools for AWS Lambda (Python) env vars: https://awslabs.github.io/aws-lambda-powertools-python/#environment-variables             
+      Environment:
+        Variables:
+          LOG_LEVEL: INFO
+    Metadata:
+      DockerContext: ./document_handler
+      Dockerfile: Dockerfile
+
+Outputs:
+  DocumentHandlerApi:
+    Description: API Gateway endpoint URL for Prod environment for Document Handler Function
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/document"
+
+  DocumentHandlerFunction:
+    Description: Document Handler Lambda Function ARN
+    Value: !GetAtt DocumentHandlerFunction.Arn
+
