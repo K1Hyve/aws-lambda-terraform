@@ -1,6 +1,6 @@
 # Terraform AWS Infrastructure Setup
 
-This Terraform setup provisions a VPC with public and private subnets, EC2 instances within an Auto Scaling Group in private subnets, an Internet Gateway, a load balancer in a public subnet, and necessary security groups.
+Deployment for a AWS Lambda Document API function that uses a MySQL backend for database persistence and S3 for the storage of small PDF files. It will be exposed using API gateway. The Lambda function can be developed using AWS SAM and Docker used for packaging the Lambda function. Credentials are securely managed with AWS Secrets Manager.
 
 ## Configuration Files
 
@@ -8,16 +8,14 @@ This Terraform setup provisions a VPC with public and private subnets, EC2 insta
 
 ## Deployment Steps
 
-1. **Initialize Terraform**:
+1. **Initialize Terraform"**
    Navigate to the directory containing your Terraform files and run the following command to initialize Terraform: `terraform init`
-2. **Review the Plan**:
+2. **Review the Plan:**
    To see the changes Terraform will make, execute: `terraform plan`
-3. **Apply the Configuration**:
-   To create the resources in AWS, run: `terraform apply`
+3. **Apply the Configuration:**
+   To create the resources in AWS, run: `terraform apply --auto-approve`
 4. **Invoke Lambda:**
-```bash
-curl "$(terraform output -raw base_url)/document/11"
-```
+   Run following command to test the Lambda function: `curl "$(terraform output -raw base_url)/document/11"`
 
 ### To do
 - Simple integration between the Lambda and S3 & RDS
@@ -26,7 +24,7 @@ curl "$(terraform output -raw base_url)/document/11"
 
 ### Known issues
 - Using Terraform to build and push images. This should be handled by a CI job on push, Terraform is the wrong tool for the job.
-- Lambda function lacks authentications
+- Lambda function lacks authentication
 
 ### Resources
 - https://www.maxivanov.io/deploy-aws-lambda-to-vpc-with-terraform/
@@ -81,6 +79,7 @@ curl "$(terraform output -raw base_url)/document/11"
 | [aws_s3_bucket_acl.documents](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_acl) | resource |
 | [aws_s3_bucket_ownership_controls.documents](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_ownership_controls) | resource |
 | [aws_s3_bucket_server_side_encryption_configuration.documents](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_server_side_encryption_configuration) | resource |
+| [aws_subnet.nat_subnet](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/subnet) | resource |
 | [aws_subnet.subnet_private](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/subnet) | resource |
 | [aws_subnet.subnet_public](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/subnet) | resource |
 | [aws_vpc.vpc](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc) | resource |
@@ -95,6 +94,8 @@ curl "$(terraform output -raw base_url)/document/11"
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | <a name="input_environment"></a> [environment](#input\_environment) | Environment (dev / stage / prod) | `string` | n/a | yes |
+| <a name="input_nat_subnet"></a> [nat\_subnet](#input\_nat\_subnet) | Subnet for NAT gateway | `string` | n/a | yes |
+| <a name="input_profile"></a> [profile](#input\_profile) | AWS Profile | `string` | `"default"` | no |
 | <a name="input_project"></a> [project](#input\_project) | Project name | `string` | n/a | yes |
 | <a name="input_rds_allocated_storage"></a> [rds\_allocated\_storage](#input\_rds\_allocated\_storage) | Allocated storage of the RDS instance | `string` | n/a | yes |
 | <a name="input_rds_identifier"></a> [rds\_identifier](#input\_rds\_identifier) | Identifier of the RDS database | `string` | n/a | yes |
@@ -102,8 +103,8 @@ curl "$(terraform output -raw base_url)/document/11"
 | <a name="input_rds_username"></a> [rds\_username](#input\_rds\_username) | Username of the RDS instance | `string` | n/a | yes |
 | <a name="input_region"></a> [region](#input\_region) | AWS region | `string` | `"us-east-1"` | no |
 | <a name="input_s3_bucket_prefix"></a> [s3\_bucket\_prefix](#input\_s3\_bucket\_prefix) | Prefix of the S3 bucket | `string` | n/a | yes |
-| <a name="input_subnet_private_cidr_block"></a> [subnet\_private\_cidr\_block](#input\_subnet\_private\_cidr\_block) | Private subnet CIDR | `string` | n/a | yes |
-| <a name="input_subnet_public_cidr_block"></a> [subnet\_public\_cidr\_block](#input\_subnet\_public\_cidr\_block) | Public subnet CIDR | `string` | n/a | yes |
+| <a name="input_subnet_private_cidr_block"></a> [subnet\_private\_cidr\_block](#input\_subnet\_private\_cidr\_block) | List of private subnet configurations | `list(any)` | n/a | yes |
+| <a name="input_subnet_public_cidr_block"></a> [subnet\_public\_cidr\_block](#input\_subnet\_public\_cidr\_block) | List of public subnet configurations | `list(any)` | n/a | yes |
 | <a name="input_vpc_cidr_block"></a> [vpc\_cidr\_block](#input\_vpc\_cidr\_block) | VPC CIDR | `string` | n/a | yes |
 
 ## Outputs

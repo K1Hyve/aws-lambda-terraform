@@ -19,4 +19,5 @@ jobs:
         config-file: .terraform-docs.yml
         output-method: replace
         output-file: "../README.md"
-        git-push: "true"
+        git-push: "false"
+        fail-on-diff: "true"
