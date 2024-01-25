@@ -1,6 +1,7 @@
 
 data "aws_iam_policy_document" "AWSLambdaTrustPolicy" {
   version = "2012-10-17"
+  
   statement {
     actions = ["sts:AssumeRole"]
     effect  = "Allow"
@@ -13,16 +14,17 @@ data "aws_iam_policy_document" "AWSLambdaTrustPolicy" {
 
 data "aws_iam_policy_document" "get_rds_secretsmanager_secrets" {
   version = "2012-10-17"
+
   statement {
-    actions = ["secretsmanager:GetSecretValue"]
-    effect   = "Allow"
+    actions   = ["secretsmanager:GetSecretValue"]
+    effect    = "Allow"
     resources = [aws_db_instance.documents.master_user_secret[0].secret_arn]
   }
 }
 
 resource "aws_iam_policy" "get_rds_secretsmanager_secrets" {
-  name        = "get_rds_secretsmanager_secrets"
-  policy      = data.aws_iam_policy_document.get_rds_secretsmanager_secrets.json
+  name   = "get_rds_secretsmanager_secrets"
+  policy = data.aws_iam_policy_document.get_rds_secretsmanager_secrets.json
 }
 
 resource "aws_iam_role" "iam_role" {
@@ -41,6 +43,6 @@ resource "aws_iam_role_policy_attachment" "iam_role_policy_attachment_lambda_vpc
 }
 
 resource "aws_iam_role_policy_attachment" "lambda_secretsmanager_role" {
-  role = aws_iam_role.iam_role.name
+  role       = aws_iam_role.iam_role.name
   policy_arn = aws_iam_policy.get_rds_secretsmanager_secrets.arn
 }

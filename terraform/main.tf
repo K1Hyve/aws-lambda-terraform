@@ -1,9 +1,12 @@
 provider "aws" {
-  region = var.region
-
+  region  = var.region
+  profile = var.profile
+  
   default_tags {
     tags = {
-      Project = var.project
+      Project     = var.project
+      Environment = var.environment
+      Name        = var.project
     }
   }
 }

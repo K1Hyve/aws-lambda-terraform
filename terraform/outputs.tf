@@ -23,12 +23,11 @@ output "rds_password_secret_arn" {
 
 output "rds_password_kms_key_id" {
   description = "RDS password KMS ID"
-  value       = aws_db_instance.documents.master_user_secret[0].kms_key_id 
+  value       = aws_db_instance.documents.master_user_secret[0].kms_key_id
   sensitive   = false
 }
 
 output "base_url" {
   description = "Base URL for API Gateway stage."
-
-  value = aws_apigatewayv2_stage.document_handler.invoke_url
+  value       = aws_apigatewayv2_stage.document_handler.invoke_url
 }

@@ -46,16 +46,16 @@ resource "aws_apigatewayv2_route" "get_document" {
   api_id = aws_apigatewayv2_api.document_handler.id
 
   authorization_type = "NONE"
-  route_key = "GET /document/{document_id}"
-  target    = "integrations/${aws_apigatewayv2_integration.document_handler.id}"
+  route_key          = "GET /document/{document_id}"
+  target             = "integrations/${aws_apigatewayv2_integration.document_handler.id}"
 }
 
 resource "aws_apigatewayv2_route" "post_document" {
   api_id = aws_apigatewayv2_api.document_handler.id
 
   authorization_type = "NONE"
-  route_key = "POST /document"
-  target    = "integrations/${aws_apigatewayv2_integration.document_handler.id}"
+  route_key          = "POST /document"
+  target             = "integrations/${aws_apigatewayv2_integration.document_handler.id}"
 }
 
 # Define a log group to store access logs for the aws_apigatewayv2_stage.document_handler API Gateway stage.
