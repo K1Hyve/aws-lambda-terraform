@@ -34,9 +34,10 @@ resource "aws_apigatewayv2_stage" "document_handler" {
 resource "aws_apigatewayv2_integration" "document_handler" {
   api_id = aws_apigatewayv2_api.document_handler.id
 
-  integration_uri    = aws_lambda_function.document_handler.invoke_arn
-  integration_type   = "AWS_PROXY"
-  integration_method = "POST"
+  payload_format_version = "2.0"
+  integration_uri        = aws_lambda_function.document_handler.invoke_arn
+  integration_type       = "AWS_PROXY"
+  integration_method     = "POST"
 }
 
 # Map an HTTP request to the Lambda function.
