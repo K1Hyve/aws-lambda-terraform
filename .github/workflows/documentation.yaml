@@ -18,4 +18,5 @@ jobs:
         working-dir: terraform
         config-file: .terraform-docs.yml
         output-method: replace
+        output-file: "../README.md"
         git-push: "true"
