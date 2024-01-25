@@ -60,6 +60,11 @@ variable "rds_allocated_storage" {
   description = "Allocated storage of the RDS instance"
 }
 
+variable "rds_database_version" {
+  description = "The database version. If omitted, it lets Amazon decide."
+  default     = ""
+}
+
 variable "s3_bucket_prefix" {
   type        = string
   description = "Prefix of the S3 bucket"

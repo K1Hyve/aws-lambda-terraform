@@ -10,4 +10,4 @@ rds_identifier            = "documents"
 rds_username              = "documents"
 rds_instance_class        = "db.t4g.micro"
 rds_allocated_storage     = 5
-s3_bucket_prefix          = "document_storage"
+s3_bucket_prefix          = "document-storage"

@@ -98,6 +98,7 @@ Deployment for a AWS Lambda Document API function that uses a MySQL backend for 
 | <a name="input_profile"></a> [profile](#input\_profile) | AWS Profile | `string` | `"default"` | no |
 | <a name="input_project"></a> [project](#input\_project) | Project name | `string` | n/a | yes |
 | <a name="input_rds_allocated_storage"></a> [rds\_allocated\_storage](#input\_rds\_allocated\_storage) | Allocated storage of the RDS instance | `string` | n/a | yes |
+| <a name="input_rds_database_version"></a> [rds\_database\_version](#input\_rds\_database\_version) | The database version. If omitted, it lets Amazon decide. | `string` | `""` | no |
 | <a name="input_rds_identifier"></a> [rds\_identifier](#input\_rds\_identifier) | Identifier of the RDS database | `string` | n/a | yes |
 | <a name="input_rds_instance_class"></a> [rds\_instance\_class](#input\_rds\_instance\_class) | Class of the RDS instance | `string` | n/a | yes |
 | <a name="input_rds_username"></a> [rds\_username](#input\_rds\_username) | Username of the RDS instance | `string` | n/a | yes |
