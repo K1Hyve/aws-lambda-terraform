@@ -7,6 +7,7 @@ resource "aws_lambda_function" "document_handler" {
   image_uri               = "${aws_ecr_repository.repo.repository_url}@${data.aws_ecr_image.lambda_image.id}"
   package_type            = "Image"
   kms_key_arn             = aws_kms_key.document_encryption_key.arn
+  timeout                 = 15
 
   vpc_config {
     subnet_ids = concat(
