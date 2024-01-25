@@ -8,7 +8,10 @@ resource "aws_lambda_function" "document_handler" {
   package_type            = "Image"
 
   vpc_config {
-    subnet_ids         = [aws_subnet.subnet_public.id, aws_subnet.subnet_private.id]
+    subnet_ids = concat(
+      [for i, subnet in var.subnet_private_cidr_block : aws_subnet.subnet_private[i].id],
+      [for i, subnet in var.subnet_public_cidr_block : aws_subnet.subnet_public[i].id],
+    )
     security_group_ids = [aws_default_security_group.default_security_group.id]
   }
 

@@ -25,14 +25,19 @@ variable "vpc_cidr_block" {
   description = "VPC CIDR"
 }
 
-variable "subnet_public_cidr_block" {
-  type        = string
-  description = "Public subnet CIDR"
+variable "subnet_private_cidr_block" {
+  description = "List of private subnet configurations"
+  type        = list(any)
 }
 
-variable "subnet_private_cidr_block" {
+variable "subnet_public_cidr_block" {
+  description = "List of public subnet configurations"
+  type        = list(any)
+}
+
+variable "nat_subnet" {
+  description = "Subnet for NAT gateway"
   type        = string
-  description = "Private subnet CIDR"
 }
 
 variable "rds_identifier" {

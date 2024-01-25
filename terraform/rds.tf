@@ -1,6 +1,6 @@
 resource "aws_db_subnet_group" "documents" {
   name       = "documents"
-  subnet_ids = [aws_subnet.subnet_private.id]
+  subnet_ids = [for i, subnet in var.subnet_private_cidr_block : aws_subnet.subnet_private[i].id]
 }
 
 resource "aws_db_instance" "documents" {

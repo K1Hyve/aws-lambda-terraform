@@ -1,12 +1,22 @@
 resource "aws_vpc" "vpc" {
   cidr_block = var.vpc_cidr_block
+
+  enable_dns_support                   = true
+  enable_dns_hostnames                 = true
+  assign_generated_ipv6_cidr_block     = true
+  enable_network_address_usage_metrics = true
+
 }
 
 # Public subnet
 
 resource "aws_subnet" "subnet_public" {
-  vpc_id                  = aws_vpc.vpc.id
-  cidr_block              = var.subnet_public_cidr_block
+  count = length(var.subnet_public_cidr_block)
+
+  vpc_id            = aws_vpc.vpc.id
+  cidr_block        = element(var.subnet_public_cidr_block, count.index)
+  availability_zone = element(local.azs, count.index)
+
   map_public_ip_on_launch = true
 
   tags = {
@@ -32,8 +42,16 @@ resource "aws_route_table" "route_table_public" {
 }
 
 resource "aws_route_table_association" "route_table_association_public" {
-  subnet_id      = aws_subnet.subnet_public.id
+  count = length(var.subnet_public_cidr_block)
+
+  subnet_id      = element(aws_subnet.subnet_public[*].id, count.index)
   route_table_id = aws_route_table.route_table_public.id
+}
+
+resource "aws_subnet" "nat_subnet" {
+  vpc_id            = aws_vpc.vpc.id
+  cidr_block        = var.nat_subnet
+  availability_zone = local.azs[0]
 }
 
 resource "aws_eip" "eip" {
@@ -43,14 +61,20 @@ resource "aws_eip" "eip" {
 
 resource "aws_nat_gateway" "nat_gateway" {
   allocation_id = aws_eip.eip.id
-  subnet_id     = aws_subnet.subnet_public.id
+  subnet_id     = aws_subnet.nat_subnet.id
+
+  depends_on = [aws_eip.eip]
 }
 
 # Private subnet
 
 resource "aws_subnet" "subnet_private" {
-  vpc_id                  = aws_vpc.vpc.id
-  cidr_block              = var.subnet_private_cidr_block
+  count = length(var.subnet_private_cidr_block)
+
+  vpc_id            = aws_vpc.vpc.id
+  cidr_block        = element(var.subnet_private_cidr_block, count.index)
+  availability_zone = element(local.azs, count.index)
+
   map_public_ip_on_launch = false
 
   tags = {
@@ -72,7 +96,9 @@ resource "aws_route_table" "route_table_private" {
 }
 
 resource "aws_route_table_association" "route_table_association_private" {
-  subnet_id      = aws_subnet.subnet_private.id
+  count = length(var.subnet_public_cidr_block)
+
+  subnet_id      = element(aws_subnet.subnet_private[*].id, count.index)
   route_table_id = aws_route_table.route_table_private.id
 }
 
@@ -81,7 +107,10 @@ resource "aws_route_table_association" "route_table_association_private" {
 
 resource "aws_default_network_acl" "default_network_acl" {
   default_network_acl_id = aws_vpc.vpc.default_network_acl_id
-  subnet_ids             = [aws_subnet.subnet_public.id, aws_subnet.subnet_private.id]
+  subnet_ids = concat(
+    [for i, subnet in var.subnet_private_cidr_block : aws_subnet.subnet_private[i].id],
+    [for i, subnet in var.subnet_public_cidr_block : aws_subnet.subnet_public[i].id],
+  )
 
   ingress {
     protocol   = -1
