@@ -19,7 +19,7 @@ resource "aws_s3_bucket_acl" "documents" {
 
 resource "aws_s3_bucket_server_side_encryption_configuration" "documents" {
   bucket = aws_s3_bucket.documents.id
-  
+
   rule {
     apply_server_side_encryption_by_default {
       kms_master_key_id = aws_kms_key.document_encryption_key.arn

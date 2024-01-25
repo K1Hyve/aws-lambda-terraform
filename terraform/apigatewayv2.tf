@@ -39,7 +39,7 @@ resource "aws_apigatewayv2_integration" "document_handler" {
   integration_method = "POST"
 }
 
-# Map an HTTP request to the Lambda function. 
+# Map an HTTP request to the Lambda function.
 # The route_key matches any GET request matching the path /document/{document_id}
 # A target matching integrations/<ID> maps to a Lambda integration with the given ID.
 resource "aws_apigatewayv2_route" "get_document" {

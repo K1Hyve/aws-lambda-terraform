@@ -36,7 +36,7 @@ Resources:
           Properties:
             Path: /document
             Method: POST
-             # Powertools for AWS Lambda (Python) env vars: https://awslabs.github.io/aws-lambda-powertools-python/#environment-variables             
+             # Powertools for AWS Lambda (Python) env vars: https://awslabs.github.io/aws-lambda-powertools-python/#environment-variables
       Environment:
         Variables:
           LOG_LEVEL: INFO

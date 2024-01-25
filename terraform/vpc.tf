@@ -52,7 +52,7 @@ resource "aws_subnet" "subnet_private" {
   vpc_id                  = aws_vpc.vpc.id
   cidr_block              = var.subnet_private_cidr_block
   map_public_ip_on_launch = false
-  
+
   tags = {
     Name = "${var.project}-private"
   }
