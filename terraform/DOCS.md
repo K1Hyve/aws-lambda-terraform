@@ -24,7 +24,7 @@ Deployment for a AWS Lambda Document API function that uses a MySQL backend for 
 
 ### Known issues
 - Using Terraform to build and push images. This should be handled by a CI job on push, Terraform is the wrong tool for the job.
-- Lambda function lacks authentications
+- Lambda function lacks authentication
 
 ### Resources
 - https://www.maxivanov.io/deploy-aws-lambda-to-vpc-with-terraform/
